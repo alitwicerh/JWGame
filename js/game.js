@@ -22,7 +22,7 @@ function initialiseGame(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.add.image(0,0,'fondo');
     let player = game.add.image(260,730,'player').scale.setTo(0.04,0.04);
-    palabras = ['trial','bad', 'had','hard','joke','eat','my','pussy'];
+    palabras = ['trial','bad','had','hard','joke','eat','my','pussy'];
     
 
     cursors = game.input.keyboard.createCursorKeys();
