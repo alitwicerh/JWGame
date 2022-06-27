@@ -7,7 +7,14 @@ let spawn;
 let urga;
 let player;
 let urgapalabra;
-var style = { font: "bold 32px Arial", fill: "#fff"};
+var style = { font: "bold 32px Arial", fill: "#fff", backgroundColor: "#000"};
+var styleActive ={ font: "bold 20px Arial", fill: "#FFAA00", backgroundColor: "#000"};
+var arraypalabras = [];
+var arrayOwps = [];
+let inicio;
+let activeword = -1;
+let activeletter = 0;
+
 
 let mainState = {
     preload: loadAssets,
@@ -28,7 +35,8 @@ function loadAssets(){
 
 function initialiseGame(){
 
-    
+    game.input.keyboard.addCallbacks(this, null, null, keyPress);
+
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.world.setBounds(0,0,600,800);
@@ -42,15 +50,21 @@ function initialiseGame(){
     enemies.enableBody = true;
     game.physics.arcade.enable(enemies);
 
-    palabras = game.add.group();
-    palabras.enableBody = true;
-    game.physics.arcade.enable(palabras);
 
-    function spawn(image){
+
+    //palabras = game.add.group();
+   
+
+    function spawn(image, palabra){
         urga = enemies.create(Phaser.Math.between(0,600),10,image);
         urga.scale.setTo(0.05,0.05);
-        urgapalabra = game.add.text(urga.x,urga.y + urga.width,'Drag me around', style ,palabras);
-        //urgapalabra.position = urga.position;
+        arrayOwps.push(urga);
+
+        urgapalabra = game.add.text(urga.x,urga.y + urga.width,palabra, style);
+        urgapalabra.enableBody = true;
+        game.physics.arcade.enable(urgapalabra);
+        arraypalabras.push(urgapalabra);
+        console.log(arraypalabras[0]);
 
         urga.body.bounce.x = urga.body.bounce.y = 1;
         urga.body.setBounds = Phaser.CANVAS.x, Phaser.CANVAS.y;
@@ -64,7 +78,7 @@ function initialiseGame(){
         game.physics.arcade.moveToXY(urga, 270 + (tangente*distancia), 800, 30);
         console.log("tangente*distancia= " ,tangente*distancia , tangente, distancia);
     }
-    spawn('owp');
+    spawn('owp', 'pedroflop');
 
 
     cursors = game.input.keyboard.createCursorKeys();
@@ -72,15 +86,42 @@ function initialiseGame(){
 }
 
 function enemyFollows() {
-    //for(let i = 0; i < 9 ; i++){
-    game.physics.arcade.moveToXY(urga, Phaser.Math.rotateToAngle(Phaser.Math.between(-10,10)), 730, 30);
-   //}
+
     
 }
 
 function gameUpdate(){
     //for(urgapalabra in urgapalabra){
-        game.physics.arcade.moveToXY(urgapalabra, urga.x, urga.y + urga.width, 30);
+        game.physics.arcade.moveToXY(arraypalabras[0], arrayOwps[0].x, arrayOwps[0].y + arrayOwps[0].width, 30);
    // }
 
+
+
+}
+
+function keyPress(char){
+    //inicio = char;
+
+    if (activeword == -1){
+        for(let i = 0; i < arraypalabras.length; i++){
+            if(arraypalabras[0].text.charAt(0) == char){
+                activeletter++;
+                console.log(arraypalabras[0].text.charAt(activeletter));
+                arraypalabras[0].addColor("#000000", 0);
+                arraypalabras[0].addColor("#ff0000", activeletter);
+                activeword = i;
+                break;
+            }
+        }
+    }
+    else if (arraypalabras[activeword].text.charAt(activeletter) == char){
+        console.log(arraypalabras[0].text.charAt(activeletter));
+        arraypalabras[activeword].addColor("#000000", activeletter);
+        arraypalabras[activeword].addColor("#ff0000", activeletter + 1);
+        activeletter++;
+    }
+    else{
+        //cuando fallas /cambiar active word a -1
+        // bombardear la palabra
+    }
 }
