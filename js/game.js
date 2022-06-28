@@ -43,12 +43,16 @@ function initialiseGame(){
     game.add.image(0,0,'fondo');
 
     player = game.add.image(260,730,'player');
-    player.scale.setTo(0.04,0.04);
+    player.scale.setTo(0.06,0.06);
+    player.enableBody = true;
     game.physics.arcade.enable(player);
+    //player.body.CollideWorldBounds(true);
 
     enemies = game.add.group();
     enemies.enableBody = true;
     game.physics.arcade.enable(enemies);
+    //enemies.body.setCollideWorldBounds(true);
+   // enemies.body.collideWorldBounds = true;
 
 
 
@@ -64,7 +68,8 @@ function initialiseGame(){
         urgapalabra.enableBody = true;
         game.physics.arcade.enable(urgapalabra);
         arraypalabras.push(urgapalabra);
-        console.log(arraypalabras[0]);
+
+        //console.log(arraypalabras[0]);
 
         urga.body.bounce.x = urga.body.bounce.y = 1;
         urga.body.setBounds = Phaser.CANVAS.x, Phaser.CANVAS.y;
@@ -75,7 +80,7 @@ function initialiseGame(){
         let distancia = Phaser.Math.distance(urga.x,urga.y, player.x, player.y);
         console.log("playerpos " ,player.x, player.y);
         console.log("urgapos " ,urga.x,urga.y);
-        game.physics.arcade.moveToXY(urga, 270 + (tangente*distancia), 800, 30);
+        game.physics.arcade.moveToXY(urga, player.x + (player.width/2) + (tangente*distancia), player.y + 100, 30);
         console.log("tangente*distancia= " ,tangente*distancia , tangente, distancia);
     }
     spawn('owp', 'pedroflop');
@@ -85,22 +90,36 @@ function initialiseGame(){
 
 }
 
-function enemyFollows() {
-
+function wordFollowsenemie() {
+    for(let i = 0; i < arraypalabras.length; i++){
+        game.physics.arcade.moveToXY(arraypalabras[i], arrayOwps[i].x, arrayOwps[i].y + arrayOwps[i].width, 30);
+    }
     
 }
 
 function gameUpdate(){
-    //for(urgapalabra in urgapalabra){
-        game.physics.arcade.moveToXY(arraypalabras[0], arrayOwps[0].x, arrayOwps[0].y + arrayOwps[0].width, 30);
-   // }
+    game.physics.arcade.overlap(player, enemies, gameOver, null, this);
 
+    wordFollowsenemie();
 
 
 }
 
+function checkOverlap(spriteA, spriteB) {
+
+    var boundsA = spriteA.getBounds();
+    var boundsB = spriteB.getBounds();
+
+return Phaser.Rectangle.intersects(boundsA, boundsB);
+}
+
+function gameOver(){
+    player.kill();
+    enemies.kill();
+    console.log("pedroflop");
+}
+
 function keyPress(char){
-    //inicio = char;
 
     if (activeword == -1){
         for(let i = 0; i < arraypalabras.length; i++){
@@ -119,9 +138,14 @@ function keyPress(char){
         arraypalabras[activeword].addColor("#000000", activeletter);
         arraypalabras[activeword].addColor("#ff0000", activeletter + 1);
         activeletter++;
+       
     }
-    else{
-        //cuando fallas /cambiar active word a -1
-        // bombardear la palabra
+    if (arraypalabras[activeword].text.length == activeletter){
+        arraypalabras[activeword].kill();
+        arrayOwps[activeword].kill();
+        activeword = -1;
+        activeletter = 0;
     }
+
+    //console.log(arraypalabras[activeword].text.length, activeletter);
 }
