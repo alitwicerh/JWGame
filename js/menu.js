@@ -27,7 +27,7 @@ function gameUpdatem(){
 }
 
 function playStage1(){
-    this.state.start('main');
+    this.state.start('mainState');
 }
 
 function playStage2(){

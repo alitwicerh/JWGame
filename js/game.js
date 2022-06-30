@@ -1,6 +1,6 @@
 
 var game = new Phaser.Game(600, 800, Phaser.AUTO, 'game');
-let palabras = ['pedroflop', 'adrianaflop', 'izanflop', 'urga', 'ejhgs'];
+let palabras = ['pedroflop', 'adrianaflop', 'izanflop', 'urga', 'ejhgs', 'paco', 'lola', 'meme', 'titi', 'chula'];
 let active;
 let enemies;
 let spawn;
@@ -22,6 +22,7 @@ let rate = 1;
 let speed = 200;
 const T = 1000/rate;
 let x = 0;
+let contwaves = 0;
 
 
 let mainState = {
@@ -69,6 +70,7 @@ function initialiseGame(){
         createWave(x);
         x++;
     }, T);;
+    contwaves++;
     //spawn('owp', 'pedroflop');
     //game.physics.arcade.overlap(player, enemies ,checkOverlap, gameOver);
 
@@ -83,10 +85,29 @@ function createWave(x){
         spawnOWP('owp',palabras[x]);
         //x++;
     }
+    /*else if (x < palabras.length && palabrasEmpty()) {
+        //clearInterval(enemies.timer);
+        //x = 0;
+        number = number*2;
+    }*/
     else{
         clearInterval(enemies.timer);
-        x = 0;
+        console.log(arraypalabras);
+        //x = 0;
     }
+    
+}
+
+function palabrasEmpty(){
+    /*for(let i = 0; i< arraypalabras.length; i++){
+        if(arraypalabras[i] != null){
+            return false;
+        }
+    }*/
+    if (enemies.length == 0){
+        return true;
+    }
+    else return false;
 }
 
 function spawnOWP(image, palabra){
@@ -108,22 +129,27 @@ function spawnOWP(image, palabra){
     //console.log("playerpos " ,player.x, player.y);
     //console.log("urgapos " ,urga.x,urga.y);
     game.physics.arcade.moveToXY(urga, player.x + (player.width/2) + (tangente*distancia), player.y + 100, 30);
+    game.physics.arcade.moveToXY(urgapalabra, player.x + (player.width/2) + (tangente*distancia), player.y + urga.width, 30);
     //console.log("tangente*distancia= " ,tangente*distancia , tangente, distancia);
 }
 
 function wordFollowsenemie() {
     for(let i = 0; i < arraypalabras.length; i++){
-        game.physics.arcade.moveToXY(arraypalabras[i], arrayOwps[i].x, arrayOwps[i].y + arrayOwps[i].width, 30);
+        if (arraypalabras[i].length != 0 ){
+            console.log(arraypalabras[i]);
+            game.physics.arcade.moveToXY(arraypalabras[i], arrayOwps[i].x, arrayOwps[i].y + arrayOwps[i].width, 30);
+        }
     }
     
 }
 
 function gameUpdate(){
 
-    wordFollowsenemie();
+    //wordFollowsenemie();
     if (checkOverlap(player , enemies) && checker){
         gameOver();
     }
+    
     checker = true;
 
 
@@ -147,7 +173,7 @@ function keyPress(char){
 
     if (activeword == -1){
         for(let i = 0; i < arraypalabras.length; i++){
-            if(arraypalabras[i].text.charAt(0) == char){
+            if(arraypalabras[i] != null && arraypalabras[i].text.charAt(0) == char){
                 activeletter++;
                 activeword = i;
                 //console.log(arraypalabras[i].text.charAt(activeletter));
@@ -164,11 +190,20 @@ function keyPress(char){
         activeletter++;
        
     }
-    if (arraypalabras[activeword].text.length  == activeletter){
-        arraypalabras[activeword].kill();
-        arrayOwps[activeword].kill();
+    if ( activeword != -1 && arraypalabras[activeword].text.length  == activeletter){
+        arraypalabras[activeword].destroy();
+        arrayOwps[activeword].destroy();
         activeword = -1;
         activeletter = 0;
+        console.log(arraypalabras);
+        if (palabrasEmpty() && contwaves <= waves){
+            enemies.timer = setInterval(() => {
+                createWave(x);
+                x++;
+            }, T);;
+            contwaves++;
+            number = number*2;
+        }
     }
 
     console.log(char);
