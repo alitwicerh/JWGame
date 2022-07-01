@@ -1,14 +1,14 @@
 
 var game = new Phaser.Game(600, 800, Phaser.AUTO, 'game');
-let palabras = ['pedroflop', 'adrianaflop', 'izanflop', 'urga', 'ejhgs', 'paco', 'lola', 'meme', 'titi', 'chula'];
+let palabras = ['pedroflop', 'adrianaflop', 'izanflop', 'urga', 'ejhgs', 'nuriolachola', 'lola', 'meme', 'titi', 'chula','fabulous', 'sharpay', 'orto', 'hebe','yolo'];
 let active;
+let palabrasEnpantalla = [];
 let enemies;
 let spawn;
 let urga;
 let player;
 let urgapalabra;
 var style = { font: "bold 32px Arial", fill: "#fff", backgroundColor: "#000"};
-//var styleActive ={ font: "bold 20px Arial", fill: "#FFAA00", backgroundColor: "#000"};
 var arraypalabras = [];
 var arrayOwps = [];
 //let inicio;
@@ -66,24 +66,22 @@ function initialiseGame(){
 
     //palabras = game.add.group();
     
-    enemies.timer = setInterval(() => {
+    /*enemies.timer = setInterval(() => {
         createWave(x);
-        x++;
-    }, T);;
-    contwaves++;
-    //spawn('owp', 'pedroflop');
-    //game.physics.arcade.overlap(player, enemies ,checkOverlap, gameOver);
-
+        //x++;
+    }, T);;*/
 
     cursors = game.input.keyboard.createCursorKeys();
 
 }
 
-function createWave(x){
+function createWave(y){
     //for(let i = 0; i < palabras.length; i++){
-    if (x < number){
-        spawnOWP('owp',palabras[x]);
-        //x++;
+    if (y < number){
+        console.log(x);
+        spawnOWP('owp',palabras[y]);
+        x++;
+       // console.log(arraypalabras);
     }
     /*else if (x < palabras.length && palabrasEmpty()) {
         //clearInterval(enemies.timer);
@@ -92,8 +90,13 @@ function createWave(x){
     }*/
     else{
         clearInterval(enemies.timer);
-        console.log(arraypalabras);
+        number = number + 5;
+        for(let i = 0; i< arraypalabras.length; i++){
+            console.log(arraypalabras[i].text);
+        }
         //x = 0;
+        contwaves++;
+        checker = true;
     }
     
 }
@@ -149,6 +152,13 @@ function gameUpdate(){
     if (checkOverlap(player , enemies) && checker){
         gameOver();
     }
+
+    if (!checker ){
+        enemies.timer = setInterval(() => {
+            createWave(x);
+            //x++;
+        }, T);;
+    }
     
     checker = true;
 
@@ -165,6 +175,7 @@ function checkOverlap(spriteA, spriteB) {
 
 function gameOver(){
     //console.log("pedroflop");
+    reset();
     game.state.start('menu');
     
 }
@@ -195,16 +206,36 @@ function keyPress(char){
         arrayOwps[activeword].destroy();
         activeword = -1;
         activeletter = 0;
-        console.log(arraypalabras);
+        //console.log(arraypalabras);
         if (palabrasEmpty() && contwaves <= waves){
             enemies.timer = setInterval(() => {
+                console.log(x);
                 createWave(x);
-                x++;
+                //x++;
             }, T);;
-            contwaves++;
-            number = number*2;
+            //contwaves++;
+            if(contwaves == waves && x == arraypalabras.length ){
+                winGame();
+                
+            }
         }
     }
 
-    console.log(char);
+    console.log(char, contwaves , x);
+}
+
+function winGame(){
+    reset();
+    game.state.start('menu');
+}
+
+function reset(){
+    arraypalabras = [];
+    arrayOwps = [];
+    activeword = -1;
+    activeletter = 0;
+    checker = false;
+    number = 5;
+    x = 0;
+    contwaves = 0;
 }
