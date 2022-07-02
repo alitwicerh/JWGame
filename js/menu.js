@@ -3,8 +3,10 @@ let menuState = {
     create: initialiseGamem,
     update: gameUpdatem
 };
-
-
+game.state.add("menu", menuState);
+game.state.add("main", mainState);
+game.state.add("main2", stage2State);
+game.state.start('menu');
 
 function loadAssetsm(){
     game.load.image('fondo','/assets/imgs/Space.png');
@@ -27,15 +29,15 @@ function gameUpdatem(){
 }
 
 function playStage1(){
-    this.state.start('mainState');
+    this.state.start('main');
 }
 
 function playStage2(){
-    this.state.start('main');
+    this.state.start('main2');
 }
 
 function playStage3(){
-    this.state.start('main');
+    this.state.start('main2');
 }
 
 function playAbout(){

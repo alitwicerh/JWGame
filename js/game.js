@@ -1,8 +1,8 @@
-
+//const { Point } = require("phaser-ce");
 var game = new Phaser.Game(600, 800, Phaser.AUTO, 'game');
 let palabras = ['pedroflop', 'adrianaflop', 'izanflop', 'urga', 'ejhgs', 'nuriolachola', 'lola', 'meme', 'titi', 'chula','fabulous', 'sharpay', 'orto', 'hebe','yolo'];
 let active;
-let palabrasEnpantalla = [];
+let palabrasEnpantalla;
 let enemies;
 let spawn;
 let urga;
@@ -11,7 +11,7 @@ let urgapalabra;
 var style = { font: "bold 32px Arial", fill: "#fff", backgroundColor: "#000"};
 var arraypalabras = [];
 var arrayOwps = [];
-//let inicio;
+
 let activeword = -1;
 let activeletter = 0;
 let checker = false;
@@ -32,8 +32,9 @@ let mainState = {
 };
 
 game.state.add("main", mainState);
-game.state.add("menu", menuState);
-game.state.start('main');
+//game.state.add("menu", menuState);
+game.state.add("main2", stage2State);
+//game.state.start("menu");
 
 function loadAssets(){
     game.load.image('fondo','assets/imgs/Space.png');
@@ -75,6 +76,18 @@ function initialiseGame(){
 
 }
 
+function getWordsInScreen(){
+    palabrasEnpantalla = [];
+    arraypalabras = [];
+    arrayOwps = [];
+   // let cont = 0;
+    for (let d = x; d < number; d++){
+        palabrasEnpantalla.push(palabras[d]);
+        //cont++;
+    }
+    //return palabrasEnpantalla;
+}
+
 function createWave(y){
     //for(let i = 0; i < palabras.length; i++){
     if (y < number){
@@ -83,20 +96,18 @@ function createWave(y){
         x++;
        // console.log(arraypalabras);
     }
-    /*else if (x < palabras.length && palabrasEmpty()) {
-        //clearInterval(enemies.timer);
-        //x = 0;
-        number = number*2;
-    }*/
     else{
         clearInterval(enemies.timer);
+       
+        console.log( arraypalabras);
+       /* for(let i = 0; i< palabrasEnpantalla.length; i++){
+            console.log(palabrasEnpantalla[i].text);
+        }*/
         number = number + 5;
-        for(let i = 0; i< arraypalabras.length; i++){
-            console.log(arraypalabras[i].text);
-        }
         //x = 0;
         contwaves++;
         checker = true;
+        //console.log()
     }
     
 }
@@ -154,6 +165,7 @@ function gameUpdate(){
     }
 
     if (!checker ){
+        getWordsInScreen();
         enemies.timer = setInterval(() => {
             createWave(x);
             //x++;
@@ -206,27 +218,29 @@ function keyPress(char){
         arrayOwps[activeword].destroy();
         activeword = -1;
         activeletter = 0;
+
         //console.log(arraypalabras);
         if (palabrasEmpty() && contwaves <= waves){
+            getWordsInScreen();
             enemies.timer = setInterval(() => {
                 console.log(x);
                 createWave(x);
                 //x++;
             }, T);;
             //contwaves++;
-            if(contwaves == waves && x == arraypalabras.length ){
+            if(contwaves == waves && x == palabras.length){
                 winGame();
                 
             }
         }
     }
 
-    console.log(char, contwaves , x);
+    //console.log(char, contwaves, x);
 }
 
 function winGame(){
     reset();
-    game.state.start('menu');
+    game.state.start('main2');
 }
 
 function reset(){
