@@ -91,7 +91,7 @@ function getWordsInScreen(){
 function createWave(y){
     //for(let i = 0; i < palabras.length; i++){
     if (y < number){
-        console.log(x);
+        //console.log(x);
         spawnOWP('owp',palabras[y]);
         x++;
        // console.log(arraypalabras);
