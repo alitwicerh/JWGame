@@ -1,7 +1,5 @@
 //const { Point } = require("phaser-ce");
 
-//const { Point } = require("phaser-ce");
-
 let stage2State = {
     preload: loadAssets2,
     create: initialiseGame2,
@@ -20,29 +18,31 @@ let activeletter2 = 0;
 let  checker2 = false;
 let maxforWave = 5;
 let x2 = 0;
-contwaves2 = 0;
+let contwaves2 = 0;
 let rnde;
 let waves2 = 3;
-let letras2 = ['a','b','c','d','f','w','e'];
-let numberletterstospawn = 7;
+let letras2 = ['h','b','c','d','f','w','e','q'];
+let numberletterstospawn = 4;
 let palabrasFangenerator = ['stimulation', 'linternation'];
-let palabrasOWPReplicator = ['computer', 'juegosweb', 'keke' ];
-let palabras2 = ['pedroflop', 'adrianaflop', 'izanflop', 'urga', 'ejhgs', 'nuriolachola', 'lola', 'meme', 'titi', 'chula','fabulous', 'sharpay', 'orto', 'hebe','yolo'];
+let palabrasOWPReplicator = ['computer', 'juegosweb' ];
+let palabras2 = ['pedroflop', 'adrianaflop', 'izanflop', 'urga', 'ejhgs', 'nuriolachola', 'lola', 'meme', 'titi', 'chula','fabulous', 'sharpay', 'orto', 'hebe','yolo', 'polo', 'wapo'];
 let generateFan = 0;
 let generateMin = 0;
-
 let generateOWPReplicator = 0;
 let cont = 0;
+let cont2 = 0;
 let angulo = -45;
+let angulo2 = -45;
+let rate2 = 1;
 //let enemiesname = ['owp', 'fangenerator','OWPReplicator'];
 
 function loadAssets2(){
     game.load.image('fondo','assets/imgs/Space.png');
-    game.load.image('player','assets/imgs/player.png');
-    game.load.spritesheet('owp','assets/imgs/asteroide.png');
+    game.load.image('player','assets/imgs/OWPReplicator.png');
+    game.load.spritesheet('owp2','assets/imgs/asteroide.png');
     //game.load.text('info', 'partA.json', true);
     game.load.image('fangenerator','assets/imgs/FanGenerator.png');
-    game.load.spritesheet('owpreplicator','/assets/imgs/OWPReplicator.png');
+    game.load.spritesheet('owpreplicator','assets/imgs/player.png');
 }
 
 function initialiseGame2(){
@@ -55,7 +55,7 @@ function initialiseGame2(){
     game.add.image(0,0,'fondo');
 
     player = game.add.image(260,700,'player');
-    player.scale.setTo(0.06,0.06);
+    player.scale.setTo(0.2,0.2);
     player.enableBody = true;
     game.physics.enable(player,Phaser.Physics.ARCADE);
 
@@ -90,28 +90,41 @@ function gameUpdate2(){
         gameOver2();
         console.log('loose');
     }
+    if (checkOverlap2(player , enemiesMin) && checker2 ){
+        gameOver2();
+        console.log('loose');
+    }
+    /*if (checkOverlap2(game.world , enemiesMin) && checker2 ){
+        enem
+        console.log('loose');
+    }*/
 
     if (!checker2 ){
         getWordsInScreen2();
         enemies2.timer = setInterval(() => {
             createWave2(x2);
             //x++;
-        }, 1000/1);;
+        }, 1000/rate2);;
     }
     
    checker2 = true;
+   //cont2 = generateMin;
 
 
 }
 
 function spawnOWP2(image, palabra){
-    urga = enemies2.create(Phaser.Math.between(10,550),10,image);
+    urga = enemies2.create(Phaser.Math.between(100,500),0,image);
     if (image == 'fangenerator'){ urga.scale.setTo(0.2,0.2);}
-    else if (image == 'owpreplicator'){ urga.scale.setTo(0.05,0.05);}
-    else urga.scale.setTo(0.06,0.06);
+    else if (image == 'owpreplicator'){ 
+        urga.scale.setTo(0.2,0.2);
+    }
+    else {
+        urga.scale.setTo(0.06,0.06);
+    }
     arrayOwps2.push(urga);
 
-    urgapalabra = game.add.text(urga.x,urga.y + urga.width,palabra, style);
+    let urgapalabra = game.add.text(urga.x,urga.y + urga.width,palabra, style);
     urgapalabra.enableBody = true;
     game.physics.arcade.enable(urgapalabra);
     arraypalabras2.push(urgapalabra);
@@ -123,13 +136,25 @@ function spawnOWP2(image, palabra){
     let anguloG = Phaser.Math.between(-10,10);
     let tangente = Math.tan(anguloG*Math.PI/180);
     let distancia = Phaser.Math.distance(urga.x,urga.y, player.x, player.y);
-    //console.log("playerpos " ,player.x, player.y);
-    //console.log("urgapos " ,urga.x,urga.y);
+
     game.physics.arcade.moveToXY(urga, player.x + (player.width/2) + (tangente*distancia), player.y + 100, 10 );
     game.physics.arcade.moveToXY(urgapalabra, player.x + (player.width/2) + (tangente*distancia), player.y + urga.width, 10);
     
-
-    if (image == 'fangenerator'){
+    if (image == 'owpreplicator'){
+        
+        urgapalabra.timer = setInterval(() => {
+            if (cont2 < numberletterstospawn){
+                spawnOwpFromGenerator2(urga.x + urga.width/2,urga.y + urga.height/2, palabras2[cont2], angulo2, anguloG);
+                cont2++; 
+                generateMin++;
+                angulo2 += 15;
+            }else{
+                clearInterval( urgapalabra.timer);
+                angulo2 = -45;
+            }
+        }, 1000/5);;
+    }
+    else if (image == 'fangenerator'){
         urga.timer = setInterval(() => {
             if (cont < numberletterstospawn){
                 spawnOwpFromGenerator2(urga.x + urga.width/2,urga.y + urga.height/2, letras2[cont], angulo, anguloG);
@@ -139,14 +164,15 @@ function spawnOWP2(image, palabra){
                 clearInterval(urga.timer);
                 angulo = -45;
             }
-        }, 1000/10);;
+        }, 1000/5);;
     }
+    
 
 }
 
 function spawnOwpFromGenerator2( x, y, palabra, angle, anguloG){
     
-    let urgaMin = enemiesMin.create(x, y,'owp');
+    let urgaMin = enemiesMin.create(x, y,'owp2');
     urgaMin.scale.setTo(0.05,0.05);
     arrayOwps2.push(urgaMin);
 
@@ -163,20 +189,39 @@ function spawnOwpFromGenerator2( x, y, palabra, angle, anguloG){
     game.physics.arcade.moveToXY(urgaMin, 300 + h, distan + 50, 60);
     game.physics.arcade.moveToXY(urgapalabra, 300 + h, distan + 50 + urgaMin.width, 60);
    // }
-   console.log(angle,tangent, 300 + h, distan + 50)
+   console.log(angle,tangent, 300 + h, distan + 50);
  
 }
 
 function chooseRndEnemy(y2){
-    if (y2 == maxforWave - 2) {
-        if (contwaves2 == 0) {
-            spawnOWP2('fangenerator', palabrasFangenerator[generateFan]);//generateFan++;
+    console.log(contwaves2);
+    if (contwaves2 > 1){
+        if (y2 == maxforWave - 3){
+            spawnOWP2('fangenerator', palabrasFangenerator[generateFan]);
+            generateFan++;
         }
-        else spawnOWP2('owpreplicator', palabrasOWPReplicator[generateOWPReplicator]);//generateOWPReplicator++;
+        else if (y2 == maxforWave -1){
+            spawnOWP2('owpreplicator', palabrasOWPReplicator[generateOWPReplicator]);
+            generateOWPReplicator++;
+        }
+        else spawnOWP2('owp2', palabras2[generateMin]); generateMin++;
     }
-    else{
-        spawnOWP2('owp', palabras2[generateMin]); generateMin++;
+    else { 
+        if (y2 == maxforWave - 2) {
+            if (contwaves2 == 0) {
+                spawnOWP2('fangenerator', palabrasFangenerator[generateFan]);
+                generateFan++;
+            }
+            else if (contwaves2 == 1){
+                spawnOWP2('owpreplicator', palabrasOWPReplicator[generateOWPReplicator]);
+                generateOWPReplicator++;
+            }
+        }
+        else{
+            spawnOWP2('owp2', palabras2[generateMin]); generateMin++; 
+        }
     }
+    
     /*if(rnde < 2) rnde = 2;
     else rnde = game.rnd.integerInRange(0,2);
     console.log(rnde);
@@ -223,14 +268,14 @@ function createWave2(y2){
 }
 
 function getWordsInScreen2(){
-    palabrasEnpantalla2 = [];
+    //palabrasEnpantalla2 = [];
     arraypalabras2 = [];
     arrayOwps2 = [];
    // let cont = 0;
-    for (let d = x; d < number; d++){
+    /*for (let d = x; d < number; d++){
         palabrasEnpantalla2.push(palabras2[d]);
         //cont++;
-    }
+    }*/
     //return palabrasEnpantalla;
 }
 
@@ -261,22 +306,24 @@ function keyPress2(char){
         activeletter2 = 0;
 
         //console.log();
-        if (palabrasEmpty2() && contwaves2 <= waves2){
+        if (palabrasEmpty2() && contwaves2 < waves2){
+            
             getWordsInScreen2();
             enemies2.timer = setInterval(() => {
                 //console.log(x);
                 createWave2(x2);
                 //x++;
-            }, 1000/1);;
+            }, 1000/rate2);;
             //contwaves++;
-            if(contwaves2 == waves2 && x2 == palabras2.length){
-                winGame2();
-                console.log('win');
-            }
+            
+        }
+        if(contwaves2 == waves2 && palabrasEmpty2()/*&& x2 == palabras2.length*/){
+            winGame2();
+            console.log('win');
         }
     }
 
-    console.log(char, contwaves2, x);
+    //console.log(char, contwaves2, x);
 }
 
 function palabrasEmpty2(){
@@ -285,12 +332,12 @@ function palabrasEmpty2(){
         return true;
     }
     else {
-        for(let i = 0; i < arraypalabras2.length; i++){
+        /*for(let i = 0; i < arraypalabras2.length; i++){
             if(arraypalabras2[i].text.length > 1){
                 return false;
             }
-        }
-        return true;
+        }*/
+        return false;
     }
 }
 
@@ -315,7 +362,7 @@ function gameOver2(){
 
 function winGame2(){
     reset2();
-    game.state.start('menu');
+    game.state.start('main3');
 }
 
 
