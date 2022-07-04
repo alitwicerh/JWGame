@@ -40,13 +40,13 @@ function loadAssets(){
     game.load.image('fondo','assets/imgs/Space.png');
     game.load.image('player','assets/imgs/player.png');
     game.load.spritesheet('owp','assets/imgs/asteroide.png');
-    game.load.text('info', 'partA.json');
+    game.load.text('info', 'partA.json', true);
 }
 
 
 
 function initialiseGame(){
-    levelConfig = JSON.parse(game.cache.getText('info'));
+    //levelConfig = JSON.parse(game.cache.getText('info'));
 
     game.input.keyboard.addCallbacks(this, null, null, keyPress);
 

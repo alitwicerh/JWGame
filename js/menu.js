@@ -6,6 +6,7 @@ let menuState = {
 game.state.add("menu", menuState);
 game.state.add("main", mainState);
 game.state.add("main2", stage2State);
+game.state.add("main3", stage3State);
 game.state.start('menu');
 
 function loadAssetsm(){
@@ -37,7 +38,7 @@ function playStage2(){
 }
 
 function playStage3(){
-    this.state.start('main2');
+    this.state.start('main3');
 }
 
 function playAbout(){

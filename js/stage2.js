@@ -39,14 +39,14 @@ let angulo = -45;
 function loadAssets2(){
     game.load.image('fondo','assets/imgs/Space.png');
     game.load.image('player','assets/imgs/player.png');
-    game.load.image('owp','assets/imgs/asteroide.png');
-    game.load.text('info', 'partA.json');
+    game.load.spritesheet('owp','assets/imgs/asteroide.png');
+    //game.load.text('info', 'partA.json', true);
     game.load.image('fangenerator','assets/imgs/FanGenerator.png');
-    game.load.image('OWPReplicator','assets/imgs/OWPReplicator.png');
+    game.load.spritesheet('owpreplicator','/assets/imgs/OWPReplicator.png');
 }
 
 function initialiseGame2(){
-    levelConfig = JSON.parse(game.cache.getText('info'));
+    //levelConfig = JSON.parse(game.cache.getText('info'));
 
     game.input.keyboard.addCallbacks(this, null, null, keyPress2);
 
@@ -66,6 +66,7 @@ function initialiseGame2(){
     enemiesMin = game.add.group();
     enemiesMin.enableBody = true;
     game.physics.arcade.enable(enemiesMin);
+    //enemies2.create(300,400,'owpreplicator').scale.setTo(0.1,0.1);;
 
     cursors = game.input.keyboard.createCursorKeys();
     /*let rnde = game.rnd.integerInRange(0,2);
@@ -104,9 +105,9 @@ function gameUpdate2(){
 }
 
 function spawnOWP2(image, palabra){
-    urga = enemies2.create(Phaser.Math.between(0,550),10,image);
+    urga = enemies2.create(Phaser.Math.between(10,550),10,image);
     if (image == 'fangenerator'){ urga.scale.setTo(0.2,0.2);}
-    else if (image == 'OWPReplicator'){ urga.scale.setTo(0.1,0.1);}
+    else if (image == 'owpreplicator'){ urga.scale.setTo(0.05,0.05);}
     else urga.scale.setTo(0.06,0.06);
     arrayOwps2.push(urga);
 
@@ -171,7 +172,7 @@ function chooseRndEnemy(y2){
         if (contwaves2 == 0) {
             spawnOWP2('fangenerator', palabrasFangenerator[generateFan]);//generateFan++;
         }
-        else spawnOWP2('OWPReplicator', palabrasOWPReplicator[generateOWPReplicator]);//generateOWPReplicator++;
+        else spawnOWP2('owpreplicator', palabrasOWPReplicator[generateOWPReplicator]);//generateOWPReplicator++;
     }
     else{
         spawnOWP2('owp', palabras2[generateMin]); generateMin++;
