@@ -23,12 +23,14 @@ let rnde;
 let waves2 = 3;
 let letras2 = ['h','b','c','d','f','w','e','q'];
 let numberletterstospawn = 4;
+let numberletterstospawn2 = 4;
 let palabrasFangenerator = ['stimulation', 'linternation'];
 let palabrasOWPReplicator = ['computer', 'juegosweb' ];
 let palabras2 = ['pedroflop', 'adrianaflop', 'izanflop', 'urga', 'ejhgs', 'nuriolachola', 'lola', 'meme', 'titi', 'chula','fabulous', 'sharpay', 'orto', 'hebe','yolo', 'polo', 'wapo'];
 let generateFan = 0;
 let generateMin = 0;
 let generateOWPReplicator = 0;
+let generateletters = 0;
 let cont = 0;
 let cont2 = 0;
 let angulo = -45;
@@ -98,6 +100,12 @@ function gameUpdate2(){
         enem
         console.log('loose');
     }*/
+    enemiesMin.forEach(element => {
+        if ((0 > element.x || element.x > 800 || element.y > 600) && checker2){
+            element.destroy();
+            console.log('destruyo');
+        }
+    });
 
     if (!checker2 ){
         getWordsInScreen2();
@@ -114,7 +122,7 @@ function gameUpdate2(){
 }
 
 function spawnOWP2(image, palabra){
-    urga = enemies2.create(Phaser.Math.between(100,500),0,image);
+    urga = enemies2.create(Phaser.Math.between(100,500),50,image);
     if (image == 'fangenerator'){ urga.scale.setTo(0.2,0.2);}
     else if (image == 'owpreplicator'){ 
         urga.scale.setTo(0.2,0.2);
@@ -141,7 +149,7 @@ function spawnOWP2(image, palabra){
     game.physics.arcade.moveToXY(urgapalabra, player.x + (player.width/2) + (tangente*distancia), player.y + urga.width, 10);
     
     if (image == 'owpreplicator'){
-        
+        if (cont2 == numberletterstospawn) {numberletterstospawn += 4;}
         urgapalabra.timer = setInterval(() => {
             if (cont2 < numberletterstospawn){
                 spawnOwpFromGenerator2(urga.x + urga.width/2,urga.y + urga.height/2, palabras2[cont2], angulo2, anguloG);
@@ -151,20 +159,26 @@ function spawnOWP2(image, palabra){
             }else{
                 clearInterval( urgapalabra.timer);
                 angulo2 = -45;
+                
             }
         }, 1000/5);;
+        //numberletterstospawn += 4;
     }
     else if (image == 'fangenerator'){
+        if (cont == numberletterstospawn2) {numberletterstospawn2 += 4;}
         urga.timer = setInterval(() => {
-            if (cont < numberletterstospawn){
+            if (cont < numberletterstospawn2){
                 spawnOwpFromGenerator2(urga.x + urga.width/2,urga.y + urga.height/2, letras2[cont], angulo, anguloG);
                 cont++; 
                 angulo += 15;
             }else{
                 clearInterval(urga.timer);
                 angulo = -45;
+                
+                //numberletterstospawn2 += 4;
             }
         }, 1000/5);;
+        //numberletterstospawn2 += 4;
     }
     
 
@@ -262,7 +276,10 @@ function createWave2(y2){
         maxforWave+=5;
         contwaves2++;
         checker2 = true;
-       
+        //cont = 0;
+        //cont2 = 0;
+        //numberletterstospawn += 4;
+        //numberletterstospawn2 += 4;
     }
     
 }
