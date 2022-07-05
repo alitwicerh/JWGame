@@ -1,6 +1,6 @@
 //const { Point } = require("phaser-ce");
 var game = new Phaser.Game(600, 800, Phaser.AUTO, 'game');
-let palabras = ['pedroflop', 'adrianaflop', 'izanflop', 'urga', 'ejhgs', 'nuriolachola', 'lola', 'meme', 'titi', 'chula','fabulous', 'sharpay', 'orto', 'hebe','yolo'];
+let palabras = [/*'pedroflop', 'adrianaflop', 'izanflop', 'urga', 'ejhgs', 'nuriolachola', 'lola', 'meme', 'titi', 'chula','fabulous', 'sharpay', 'orto', 'hebe','yolo'*/];
 let active;
 let palabrasEnpantalla;
 let enemies;
@@ -23,6 +23,7 @@ let speed = 200;
 const T = 1000/rate;
 let x = 0;
 let contwaves = 0;
+let puntos = 0;
 
 
 let mainState = {
@@ -38,7 +39,7 @@ game.state.add("main2", stage2State);
 
 function loadAssets(){
     game.load.image('fondo','assets/imgs/Space.png');
-    game.load.image('player','assets/imgs/player.png');
+    game.load.image('player','assets/imgs/OWPReplicator.png');
     game.load.spritesheet('owp','assets/imgs/asteroide.png');
     game.load.text('info', 'partA.json', true);
 }
@@ -46,7 +47,9 @@ function loadAssets(){
 
 
 function initialiseGame(){
-    //levelConfig = JSON.parse(game.cache.getText('info'));
+    levelConfig = JSON.parse(game.cache.getText('info'));
+    levelConfig.words.medium.p.forEach(p => almacenaPalabra1(p, 1));
+    
 
     game.input.keyboard.addCallbacks(this, null, null, keyPress);
 
@@ -55,13 +58,15 @@ function initialiseGame(){
     game.add.image(0,0,'fondo');
 
     player = game.add.image(260,700,'player');
-    player.scale.setTo(0.06,0.06);
+    player.scale.setTo(0.2,0.2);
     player.enableBody = true;
     game.physics.enable(player,Phaser.Physics.ARCADE);
 
     enemies = game.add.group();
     enemies.enableBody = true;
     game.physics.arcade.enable(enemies);
+
+    game.add.text(10, 10, 'Puntos:', style);
     //enemies.physics.setCollideWorldBounds(true);
     //enemies.body.ARCADE.
 
@@ -172,7 +177,9 @@ function gameUpdate(){
         }, T);;
     }
     
+    game.add.text(150, 10, puntos, style);
     checker = true;
+
 
 
 }
@@ -202,6 +209,7 @@ function keyPress(char){
                 //console.log(arraypalabras[i].text.charAt(activeletter));
                 arraypalabras[activeword].addColor("#000000", 0);
                 arraypalabras[activeword].addColor("#ff0000", activeletter);
+                puntos++;
                 break;
             }
         }
@@ -210,6 +218,7 @@ function keyPress(char){
         //console.log(arraypalabras[0].text.charAt(activeletter));
         arraypalabras[activeword].addColor("#000000", activeletter);
         arraypalabras[activeword].addColor("#ff0000", activeletter + 1);
+        puntos++;
         activeletter++;
        
     }
@@ -252,4 +261,13 @@ function reset(){
     number = 5;
     x = 0;
     contwaves = 0;
+}
+
+//JSON
+function almacenaPalabra1(palabra, size3)
+{
+    if(size3 == 1)
+    {
+        palabras.push(palabra);
+    }
 }

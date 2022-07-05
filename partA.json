@@ -1,9 +1,10 @@
 {
     "words": {
         "large": {"p": ["computer", "orthodox", "traction", "baseball", "ambition"]},
-        "extralarge": {"p": ["stimulation", "ghostwriter"]},
-        "medium": {"p": ["pot","stop","agent","tie","pray","march","cut","sell","waste","rib","lion","spine","fan","rage","elect"]},
-        "short": {"p": ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]},
+        "extralarge": {"p": [ "ghostwriter", "initiative"]},
+        "medium": {"p": ["pot","stop","agent","tie","march","pray","cut","sell","waste","rib","lion","neck","fan","rage","elect"]},
+        "medium2": {"p": ["pot","stop","agent","tie","march","pray","fan","sell","waste","rib","lion","neck","cut","rage","elect", "life","kill"]},
+        "short": {"p": ["h","b","c","d","f","w","x","q"]},
         "partC": {"p": ["mastermind", "leadership", "indication", "reluctance"]}
     },
     "waves": [
