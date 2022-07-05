@@ -8,8 +8,8 @@
         "partC": {"p": ["mastermind", "leadership", "indication", "reluctance"]}
     },
     "waves": [
-        {"wave": 3},
-        {"rate": 3},
-        {"speed": 200}
+        {"wave": [3]},
+        {"rate": [3]},
+        {"speed": [200]}
     ]
 }

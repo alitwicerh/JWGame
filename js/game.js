@@ -45,11 +45,10 @@ function loadAssets(){
 }
 
 
-
 function initialiseGame(){
     levelConfig = JSON.parse(game.cache.getText('info'));
     levelConfig.words.medium.p.forEach(p => almacenaPalabra1(p, 1));
-    
+    //levelConfig.waves.wave.forEach(p => almacenaPalabra1(p, 2));
 
     game.input.keyboard.addCallbacks(this, null, null, keyPress);
 
@@ -270,4 +269,9 @@ function almacenaPalabra1(palabra, size3)
     {
         palabras.push(palabra);
     }
+    /*else if(size3 == 2)
+    {
+        waves = palabra;
+    }*/
+    
 }
